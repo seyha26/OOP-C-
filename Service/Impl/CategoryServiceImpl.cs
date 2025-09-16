@@ -1,5 +1,4 @@
 using WebStockManagement.Context;
-using WebStockManagement.Entities;
 using WebStockManagement.Exceptions;
 
 namespace WebStockManagement.Service.Impl;

@@ -1,6 +1,3 @@
-using WebStockManagement.Entities;
-using WebStockManagement.Exceptions;
-
 namespace WebStockManagement.Service;
 
 public interface CategoryService
