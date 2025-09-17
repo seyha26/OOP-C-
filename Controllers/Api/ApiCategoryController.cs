@@ -70,7 +70,7 @@ public class ApiCategoryController : ControllerBase
     }
 
     [HttpPost]
-    [Route("delete/{id}")]
+    [Route("delete")]
     public IActionResult DeleteCategory(Category category)
     {
         try

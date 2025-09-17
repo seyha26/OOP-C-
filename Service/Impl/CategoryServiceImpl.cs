@@ -19,19 +19,23 @@ public class CategoryServiceImpl : CategoryService
         {
             throw new WebException("400", "Categroy code already exists");
         }
+        category.Status = Constants.Constants.StatusActive;
         _context.Category.Add(category);
         _context.SaveChanges();
     }
 
     public List<Category> GetCategoriesAll()
     {
-        var categoryList = _context.Category.ToList();
+        var categoryList = _context.Category
+            .Where(c=>c.Status == Constants.Constants.StatusActive)
+            .ToList();
         return categoryList;
     }
 
     public Category GetCategoryById(int Id)
     {
-        var category = _context.Category.Where(c => c.Id == Id).SingleOrDefault();
+        var category = _context.Category
+            .SingleOrDefault(c => c.Id == Id && c.Status == Constants.Constants.StatusActive);
         if (category == null)
         {
             throw new WebException("400", "Category not found");
@@ -41,24 +45,28 @@ public class CategoryServiceImpl : CategoryService
 
     public void UpdateCategroy(Category category)
     {
-        var existingCategory = _context.Category.FirstOrDefault(c => c.Id == category.Id);
+        var existingCategory = _context.Category
+            .FirstOrDefault(c => c.Id == category.Id && c.Status == Constants.Constants.StatusActive);
         if (existingCategory == null)
         {
             throw new WebException("400", "Category not found");
         }
 
-        _context.Entry(existingCategory).CurrentValues.SetValues(category);
+        existingCategory.Name = category.Name;
+        _context.Update(existingCategory);
         _context.SaveChanges();
     }
 
     public void DeleteCategory(Category category)
     {
-        var existingCategory = _context.Category.Where(c => c.Id == category.Id).FirstOrDefault();
+        var existingCategory = _context.Category
+            .FirstOrDefault(c => c.Id == category.Id && c.Status == Constants.Constants.StatusActive);
         if (existingCategory == null)
         {
             throw new WebException("400", "Category not found");
         }
-        _context.Category.Remove(existingCategory);
+        existingCategory.Status = Constants.Constants.StatusDelete;
+        _context.Update(existingCategory);
         _context.SaveChanges();
     }
 

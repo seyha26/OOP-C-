@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebStockManagement")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15b6b56e51c8238b1da6d760d765db12c4a8a4c4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f6d720a61ea8dc1615b695dbac74a43ba395b495")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebStockManagement")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebStockManagement")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
