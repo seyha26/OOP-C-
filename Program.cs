@@ -9,6 +9,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<CategoryService, CategoryServiceImpl>();
+builder.Services.AddScoped<ProductService, ProductServiceImpl>();
 
 var app = builder.Build();
 

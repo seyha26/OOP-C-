@@ -13,4 +13,5 @@ public class Product
 
     [ForeignKey("CategoryId")]
     public Category Category { get; set; }
+    public string Status { get; set; }
 }
