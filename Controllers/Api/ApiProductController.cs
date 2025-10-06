@@ -2,8 +2,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebStockManagement.Dto;
 using WebStockManagement.Dto.Request;
-using WebStockManagement.Entities;
 using WebStockManagement.Service;
+using WebStockManagement.Exceptions;
 
 namespace WebStockManagement.Controllers.Api;
 
@@ -21,7 +21,7 @@ public class ApiProductController : ControllerBase
     }
 
     [HttpGet]
-    [Route("lisit")]
+    [Route("list")]
     public IActionResult GetAllProducts()
     {
         try
@@ -30,7 +30,7 @@ public class ApiProductController : ControllerBase
             var productList = _productService.GetAllProducts();
             _messageResponse.GetDataSuccess(productList);
         }
-        catch (WebException ex)
+        catch (Exceptions.WebException ex)
         {
             _messageResponse.SetMessageInternalServerError(ex.Message);
         }
@@ -43,16 +43,16 @@ public class ApiProductController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{Id}")]
+    [Route("getById/{Id}")]
     public IActionResult GetProductById(int Id)
     {
         _messageResponse = new MessageResponse();
         try
         {
-            var product = GetProductById(Id);
+            var product = _productService.GetProductById(Id);
             _messageResponse.GetDataSuccess(product);
         }
-        catch (WebException ex)
+        catch (Exceptions.WebException ex)
         {
             _messageResponse.SetMessageInternalServerError(ex.Message);
         }
@@ -72,17 +72,20 @@ public class ApiProductController : ControllerBase
         {
             _productService.CreateProduct(req);
             _messageResponse.SetMessageError("Create product success");
+            return Ok(_messageResponse);
         }
-        catch (WebException ex)
+        catch (Exceptions.WebException ex)
         {
-            _messageResponse.SetMessageInternalServerError(ex.Message);
+            _messageResponse.SetMessageError(ex.Message);
+            return BadRequest(_messageResponse);
         }
         catch (Exception ex)
         {
-            _messageResponse.SetMessageError(ex.Message);
+            _messageResponse.SetMessageInternalServerError(ex.Message);
+            return StatusCode(500, _messageResponse);
         }
-        return Ok(_messageResponse);
     }
+
 
     [HttpPost]
     [Route("update")]
@@ -94,7 +97,7 @@ public class ApiProductController : ControllerBase
             _productService.UpdateProduct(req);
             _messageResponse.SetMessageError("Update product success");
         }
-        catch (WebException ex)
+        catch (Exceptions.WebException ex)
         {
             _messageResponse.SetMessageInternalServerError(ex.Message);
         }
@@ -115,7 +118,7 @@ public class ApiProductController : ControllerBase
             _productService.DeleteProduct(Id);
             _messageResponse.SetMessageError("Delete product success"); ;
         }
-        catch (WebException ex)
+        catch (Exceptions.WebException ex)
         {
             _messageResponse.SetMessageInternalServerError(ex.Message);
         }

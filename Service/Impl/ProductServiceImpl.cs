@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using WebStockManagement.Context;
 using WebStockManagement.Dto.Request;
 using WebStockManagement.Entities;
@@ -18,7 +19,7 @@ public class ProductServiceImpl : ProductService
 
     public void CreateProduct(ProductRequest req)
     {
-        var category = _categoryService.GetCategoryById(req.CategroyId);
+        var category = _categoryService.GetCategoryById(req.CategoryId);
         if(req.Name == null)
         {
             throw new WebException("400", "Product name is required");
@@ -26,8 +27,9 @@ public class ProductServiceImpl : ProductService
         var createProduct = new Product();
         createProduct.Name = req.Name;
         createProduct.Category = category;
+        createProduct.Status = Constants.Constants.StatusActive;
         createProduct.Description = req.Description;
-        _context.Add(createProduct);
+        _context.Products.Add(createProduct);
         _context.SaveChanges();
     }
 
@@ -41,14 +43,15 @@ public class ProductServiceImpl : ProductService
 
     public List<Product> GetAllProducts()
     {
-        List<Product> productList = _context
-            .Products.ToList().OrderByDescending(c => c.Id).ToList();
+        List<Product> productList = _context.Products
+            .Include(p => p.Category) .Where(c=>c.Status == Constants.Constants.StatusActive).ToList().OrderByDescending(c => c.Id).ToList();
         return productList;
     }
 
     public Product GetProductById(int Id)
     {
         var product = _context.Products
+            .Include(p => p.Category) 
             .SingleOrDefault(p => p.Id == Id && p.Status == Constants.Constants.StatusActive);
         if (product == null)
         {
@@ -59,7 +62,7 @@ public class ProductServiceImpl : ProductService
 
     public void UpdateProduct(ProductRequest req)
     {
-        var category = _categoryService.GetCategoryById(req.CategroyId);
+        var category = _categoryService.GetCategoryById(req.CategoryId);
         var product = GetProductById(req.Id);
         if(product == null)
         {

@@ -35,7 +35,7 @@ public class CategoryServiceImpl : CategoryService
     public Category GetCategoryById(int Id)
     {
         var category = _context.Category
-            .SingleOrDefault(c => c.Id == Id && c.Status == Constants.Constants.StatusActive);
+            .FirstOrDefault(c => c.Id == Id && c.Status == Constants.Constants.StatusActive);
         if (category == null)
         {
             throw new WebException("400", "Category not found");
